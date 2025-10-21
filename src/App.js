@@ -1,23 +1,23 @@
-import logo from './logo.svg';
+import React from 'react';
+// import imagen from './esferasdg.png';
 import './App.css';
+import Header from './components/Header/Header';
+import UserDirectory from './components/UserDirectory/UserDirectory';
+import TodoList from './components/TodoList/TodoLIst'; // Importamos el nuevo componente
+import ThemeSwitcher from './components/ThemeSwitcher/ThemeSwitcher'; // Importamos el ThemeSwitcher
+import { useContext } from 'react';
+import ThemeContext from './context/ThemeContext';
 
 function App() {
+  const { theme } = useContext(ThemeContext);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={`App ${theme}`}>
+      <Header />
+      {/* <img src={imagen} className="App-logo" alt="logo" /> */}
+      <main>
+        <TodoList />
+        <UserDirectory />
+      </main>
     </div>
   );
 }
