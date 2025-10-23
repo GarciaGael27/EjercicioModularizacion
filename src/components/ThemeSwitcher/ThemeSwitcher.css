@@ -1,0 +1,20 @@
+.theme-switcher {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 10px 15px;
+  cursor: pointer;
+  border: none;
+  border-radius: 100%;
+  font-weight: bold;
+  background-color: #60768f;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.theme-switcher:hover {
+  background-color: #141618;
+  transform: scale(1.1);
+}

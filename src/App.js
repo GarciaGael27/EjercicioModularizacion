@@ -1,23 +1,36 @@
-import React from 'react';
-// import imagen from './esferasdg.png';
+import React, { useContext } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
-import Header from './components/Header/Header';
-import UserDirectory from './components/UserDirectory/UserDirectory';
-import TodoList from './components/TodoList/TodoLIst'; // Importamos el nuevo componente
-import ThemeSwitcher from './components/ThemeSwitcher/ThemeSwitcher'; // Importamos el ThemeSwitcher
-import { useContext } from 'react';
 import ThemeContext from './context/ThemeContext';
+
+// Importar el Layout y las Páginas
+import Layout from './components/Layout/Layout';
+import Home from './components/Home/Home';
+import TodoList from './components/TodoList/TodoLIst';
+import UserDirectory from './components/UserDirectory/UserDirectory';
+import NotFound from './components/NotFound/NotFound';
 
 function App() {
   const { theme } = useContext(ThemeContext);
+
   return (
     <div className={`App ${theme}`}>
-      <Header />
-      {/* <img src={imagen} className="App-logo" alt="logo" /> */}
-      <main>
-        <TodoList />
-        <UserDirectory />
-      </main>
+      {/* El componente <Routes> envuelve todas las rutas */}
+      <Routes>
+        {/* Esta es una "Ruta de Layout".
+          Todas las rutas anidadas dentro se renderizarán DENTRO del <Outlet /> de Layout.
+        */}
+        <Route path="/" element={<Layout />}>
+
+          {/* Rutas Hijas */}
+          <Route index element={<Home />} />
+          <Route path="tareas" element={<TodoList />} />
+          <Route path="directorio" element={<UserDirectory />} />
+
+          {/* Ruta "Catch-all" para 404 (No encontrado) */}
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
     </div>
   );
 }
