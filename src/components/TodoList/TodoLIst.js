@@ -1,19 +1,44 @@
 import React, { useState } from 'react';
 import { FaTrash, FaCheck} from 'react-icons/fa';
+import {db} from '../../firebase';
+import { collection, query, orderBy, onSnapshot, addDoc, doc, updateDoc, deleteDoc, serverTimestamp } from "firebase/firestore"; 
 import './TodoList.css';
 
 const TodoList = () => {
-  const [tasks, setTasks] = useState([
-    { id: 1, text: 'Aprender React' },
-    { id: 2, text: 'Construir una App' },
-    { id: 3, text: 'Modularizar componentes' }
-  ]);
+  const [tasks, setTasks] = useState([]);
 
   // Nuevo estado para el campo de texto
   const [inputValue, setInputValue] = useState('');
+  // --- LEER TAREAS (GET) ---
+  // useEffect se ejecutará cuando el componente se monte
+  useEffect(() => {
+    // 1. Creamos una referencia a nuestra colección "tasks" en Firestore
+    const collectionRef = collection(db, "tasks");
+
+    // 2. Creamos una consulta (query) para ordenar las tareas por fecha
+    const q = query(collectionRef, orderBy("createdAt", "asc"));
+
+    // 3. onSnapshot es el ¡ESCUCHADOR EN TIEMPO REAL!
+    // Se dispara una vez al inicio y luego CADA VEZ que los datos cambian
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const newTasks = [];
+      querySnapshot.forEach((doc) => {
+        newTasks.push({ 
+          ...doc.data(), 
+          id: doc.id // El ID del documento es importante
+        });
+      });
+      setTasks(newTasks); // Actualizamos nuestro estado de React
+    });
+
+    // Esta función de limpieza se ejecuta cuando el componente se "desmonta"
+    // Evita fugas de memoria
+    return () => unsubscribe();
+
+  }, []); // El '[]' asegura que esto se ejecute solo una vez
 
   // Función para manejar el envío del formulario
-  const handleAddTask = (e) => {
+  const handleAddTask = async (e) => {
     e.preventDefault(); // Evita que la página se recargue
     if (inputValue.trim() === '') return; // No añadir tareas vacías
 
