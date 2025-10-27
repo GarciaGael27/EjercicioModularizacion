@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { FaTrash, FaCheck} from 'react-icons/fa';
-import {db} from '../../firebase';
-import { collection, query, orderBy, onSnapshot, addDoc, doc, updateDoc, deleteDoc, serverTimestamp } from "firebase/firestore"; 
+import React, { useState, useEffect } from 'react'; // <-- Añade useEffect
+import { db } from '../../firebaseConfig'; // <-- Importa nuestra config
+import { collection, query, orderBy, onSnapshot, addDoc, doc, updateDoc, deleteDoc, serverTimestamp } from "firebase/firestore"; // <-- Importa funciones de Firestore
 import './TodoList.css';
+import TodoItem from '../TodoItem/TodoItem';
 
 const TodoList = () => {
-  const [tasks, setTasks] = useState([]);
-
-  // Nuevo estado para el campo de texto
+  // El estado 'tasks' ahora empieza vacío
+  const [tasks, setTasks] = useState([]); 
   const [inputValue, setInputValue] = useState('');
+
   // --- LEER TAREAS (GET) ---
   // useEffect se ejecutará cuando el componente se monte
   useEffect(() => {
@@ -37,31 +37,43 @@ const TodoList = () => {
 
   }, []); // El '[]' asegura que esto se ejecute solo una vez
 
-  // Función para manejar el envío del formulario
-  const handleAddTask = async (e) => {
-    e.preventDefault(); // Evita que la página se recargue
-    if (inputValue.trim() === '') return; // No añadir tareas vacías
+  // --- AÑADIR TAREA (CREATE) ---
+  const handleAddTask = async (e) => { // La hacemos 'async'
+    e.preventDefault();
+    if (inputValue.trim() === '') return;
 
-    const newTask = {
-      id: Date.now(), // ID único basado en la fecha actual
+    // ¡En lugar de solo 'setTasks', escribimos en la BD!
+    await addDoc(collection(db, "tasks"), {
       text: inputValue,
-      completed: false
-    };
+      isComplete: false,
+      createdAt: serverTimestamp() // Marca de tiempo de Firebase
+    });
 
-    setTasks([...tasks, newTask]); // Añadimos la nueva tarea a la lista
-    setInputValue(''); // Limpiamos el campo de texto
+    setInputValue('');
+    // NOTA: No necesitamos 'setTasks' aquí.
+    // ¡'onSnapshot' detectará el nuevo documento y actualizará el estado por nosotros!
   };
 
-    // Función para eliminar una tarea
-  const handleDeleteTask = (taskId) => {
-    setTasks(tasks.filter(task => task.id !== taskId));
+  // --- MARCAR TAREA (UPDATE) ---
+  const handleToggleComplete = async (task) => { // Pasamos el objeto 'task' entero
+    // 1. Creamos una referencia al documento específico por su ID
+    const taskRef = doc(db, "tasks", task.id);
+
+    // 2. Actualizamos ese documento
+    await updateDoc(taskRef, {
+      isComplete: !task.isComplete // Invertimos el valor
+    });
+    // De nuevo, ¡onSnapshot se encarga de actualizar la UI!
   };
 
-  const handleCompleteTask = (taskId) => {
-    setTasks(tasks.map(task => 
-      task.id === taskId ? { ...task, completed: true } : task
-    ));
-    console.log(`Tarea con ID ${taskId} completada.`);
+  // --- BORRAR TAREA (DELETE) ---
+  const handleDeleteTask = async (idToDelete) => {
+    // 1. Creamos una referencia al documento
+    const taskRef = doc(db, "tasks", idToDelete);
+
+    // 2. Borramos el documento
+    await deleteDoc(taskRef);
+    // ¡onSnapshot se encarga del resto!
   };
 
   return (
@@ -79,19 +91,23 @@ const TodoList = () => {
         <button type="submit">Añadir</button>
       </form>
 
+      {/* Lista de tareas */}
       <ul>
         {tasks.map(task => (
-          <li key={task.id}>
-            <div class={`task-item ${task.completed ? 'completed' : ''}`}>
-                <span class="task-text">{task.text}</span>
-                <div class="spacer">
-                    <button class={`button-complete ${task.completed ? 'completed' : ''}`} disabled={task.completed} onClick={() => handleCompleteTask(task.id)}><FaCheck /> </button>
-                    <button class = "button-delete" onClick={() => handleDeleteTask(task.id)}><FaTrash /></button>
-                </div>
-            </div>
-          </li>
+          <TodoItem 
+            key={task.id}
+            task={task}
+            // ¡Pasa la función correctamente!
+            onToggleComplete={() => handleToggleComplete(task)} // Pasa el objeto 'task'
+            onDeleteTask={handleDeleteTask} // Esta ya pasaba solo el ID
+          />
         ))}
       </ul>
+
+      {/* Mensaje cuando no hay tareas */}
+      {tasks.length === 0 && (
+        <p>No tienes tareas. ¡Añade una nueva!</p>
+      )}
     </div>
   );
 };
