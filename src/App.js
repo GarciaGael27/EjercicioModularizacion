@@ -8,6 +8,8 @@ import Layout from './components/Layout/Layout';
 import Home from './components/Home/Home';
 import TodoList from './components/TodoList/TodoLIst';
 import UserDirectory from './components/UserDirectory/UserDirectory';
+import CompletedTasks from './components/CompletedTasks/CompletedTasks';
+import DeletedTasks from './components/DeletedTasks/DeletedTasks';
 import NotFound from './components/NotFound/NotFound';
 
 function App() {
@@ -25,6 +27,8 @@ function App() {
           {/* Rutas Hijas */}
           <Route index element={<Home />} />
           <Route path="tareas" element={<TodoList />} />
+          <Route path="completadas" element={<CompletedTasks />} />
+          <Route path="eliminadas" element={<DeletedTasks />} />
           <Route path="directorio" element={<UserDirectory />} />
 
           {/* Ruta "Catch-all" para 404 (No encontrado) */}

@@ -1,0 +1,197 @@
+/* Página de inicio minimalista */
+.home-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: Arial, sans-serif;
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.loading {
+  text-align: center;
+  color: #666;
+  font-size: 1.1rem;
+  padding: 40px;
+}
+
+/* Welcome Section */
+.welcome-section {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.welcome-section h1 {
+  font-size: 2.2rem;
+  font-weight: 300;
+  color: #2c3e50;
+  margin-bottom: 10px;
+  letter-spacing: -0.5px;
+}
+
+.welcome-section p {
+  font-size: 1.1rem;
+  color: #7f8c8d;
+  margin: 0;
+  font-weight: 300;
+}
+
+/* Stats Section */
+.stats-section {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  margin-bottom: 50px;
+  padding: 30px 0;
+  border-top: 1px solid #ecf0f1;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-number {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 200;
+  color: #3498db;
+  margin-bottom: 5px;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: #95a5a6;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 500;
+}
+
+/* Navigation Section */
+.nav-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+.nav-link {
+  display: inline-block;
+  padding: 15px 40px;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  min-width: 200px;
+  text-align: center;
+  border: 1px solid transparent;
+}
+
+.nav-link.primary {
+  background-color: #3498db;
+  color: white;
+}
+
+.nav-link.primary:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.nav-link.secondary {
+  background-color: transparent;
+  color: #3498db;
+  border-color: #3498db;
+}
+
+.nav-link.secondary:hover {
+  background-color: #3498db;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Modo oscuro */
+.dark .welcome-section h1 {
+  color: #ecf0f1;
+}
+
+.dark .welcome-section p {
+  color: #bdc3c7;
+}
+
+.dark .stats-section {
+  border-color: #34495e;
+}
+
+.dark .stat-number {
+  color: #5dade2;
+}
+
+.dark .stat-label {
+  color: #85929e;
+}
+
+.dark .nav-link.primary {
+  background-color: #5dade2;
+}
+
+.dark .nav-link.primary:hover {
+  background-color: #3498db;
+}
+
+.dark .nav-link.secondary {
+  color: #5dade2;
+  border-color: #5dade2;
+}
+
+.dark .nav-link.secondary:hover {
+  background-color: #5dade2;
+  color: #2c3e50;
+}
+
+.dark .loading {
+  color: #bdc3c7;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .home-container {
+    padding: 30px 15px;
+  }
+
+  .welcome-section h1 {
+    font-size: 1.8rem;
+  }
+
+  .stats-section {
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+
+  .stat-number {
+    font-size: 2rem;
+  }
+
+  .nav-link {
+    min-width: 180px;
+    padding: 12px 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-section {
+    gap: 30px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .nav-link {
+    min-width: 100%;
+  }
+
+  .welcome-section h1 {
+    font-size: 1.6rem;
+  }
+}
