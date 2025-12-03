@@ -8,11 +8,9 @@ const Header = () => {
     return (
         //npx vercel --prod
         <header className="app-header">
-
         <div className="logo-nav">
             <img src={logo} alt="Logo" className="logo" />
             <nav>
-                {/* Usamos <Link> en lugar de <a href=""> */}
                 <Link to="/">Inicio</Link>
                 <Link to="/tareas">Tareas</Link>
                 <Link to="/completadas">Completadas</Link>
